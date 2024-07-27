@@ -1,3 +1,10 @@
+var env = require("dotenv").config();
+
+const host = process.env.HOST;
+const user = process.env.USER;
+const password = process.env.PASSWORD;
+const database = process.env.DATABASE;
+
 class db_gateway { 
 
     constructor() {
@@ -9,10 +16,10 @@ class db_gateway {
         const mysql = require('mysql');  
 
         const db_con = mysql.createConnection({
-            host: "tech-challenge-2.cz0cqws8o34b.us-east-1.rds.amazonaws.com",
-            user: "admin",
-            password: "HsZe0R5R5HpuqafF1vfH",
-            database: "tech-challenge"
+            host: host,
+            user: user,
+            password: password,
+            database: database
          }); 
 
         db_con.connect(function(err) {
