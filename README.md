@@ -21,5 +21,6 @@ This project is an example of a CRUD (Create, Read, Update, Delete) application 
    npm install
 
 3. Configure the enviroment variables
+   
    Rename the file .env.example to .env and adjust the variables as needed.
    
