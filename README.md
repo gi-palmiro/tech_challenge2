@@ -13,14 +13,15 @@ This project is an example of a CRUD (Create, Read, Update, Delete) application 
    Run in the terminal:
 
    git clone https://github.com/your-username/your-repository.git
+   
    cd your-repository
 
-2. Install the dependencies
+3. Install the dependencies
    Run in the terminal:
 
    npm install
 
-3. Configure the enviroment variables
+4. Configure the enviroment variables
    
    Rename the file .env.example to .env and adjust the variables as needed.
    
