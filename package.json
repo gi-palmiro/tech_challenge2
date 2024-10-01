@@ -8,8 +8,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "This project is an example of a CRUD (Create, Read, Update, Delete) application using Node.js and Express.",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "mysql": "^2.18.1",

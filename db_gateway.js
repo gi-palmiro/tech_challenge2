@@ -40,7 +40,14 @@ class db_gateway {
                callBack(err, null);                   
            } else {
                callBack(null, "Success");          
-           }         
+           }   
+           
+           db_con.end((err) => {
+            if (err) {
+              console.log("Erro ao fechar a conexão:", err.message);
+            }
+         });
+
       }); 
 
     }      
@@ -55,6 +62,11 @@ class db_gateway {
            } else {
                callBack(null, result);          
            }         
+           db_con.end((err) => { 
+            if (err) {
+              console.log("Erro ao fechar a conexão:", err.message);
+            }
+         });
       }); 
 
     }      

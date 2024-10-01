@@ -1,80 +1,217 @@
 
- var db_gateway    = require('./db_gateway.js');
- var http_requests = require('./http_requests.js');
- var books = require('./books.js');   
+//  var db_gateway    = require('./db_gateway.js');
+//  var http_requests = require('./http_requests.js');
+//  var books = require('./books.js');   
 
- const http = require('http');
- const hostname = '127.0.0.1';
- const port = 5000;
+//  const http = require('http');
+//  const hostname = '127.0.0.1';
+//  const port = 5000;
+//  const cors = require('cors');
+//  const express = require('express');
+//  const app = express();
 
- const server = http.createServer((req, res) => { 
+//  app.use(cors());
 
-     var dg = new db_gateway();
-     var httpRequest = new http_requests(req);
-     var book = new books(dg); 
+//  const server = http.createServer((req, res) => { 
 
-     var payload = "";            
+//      var dg = new db_gateway();
+//      var httpRequest = new http_requests(req);
+//      var book = new books(dg); 
 
-     req.on('data', function (data) {
-         payload += data;
-     });      
+//      var payload = "";            
 
-     req.on('end', function () {
+//      req.on('data', function (data) {
+//          payload += data;
+//      });      
 
-         function callBack(err, result) {
+//      req.on('end', function () {
 
-             res.statusCode = 200;
+//          function callBack(err, result) {
 
-             res.setHeader('Content-Type', 'application/json');
+//              res.statusCode = 200;
 
-             var response = {}
+//              res.setHeader('Content-Type', 'application/json');
 
-             if (err) { 
-                 response["error"] = err.message;
-             } else {
-                 response["data"] = result; 
-             }
+//              var response = {}
 
-             res.write(JSON.stringify(response, null, 4));
-             res.end();
-         }
+//              if (err) { 
+//                  response["error"] = err.message;
+//              } else {
+//                  response["data"] = result; 
+//              }
 
-         resourceId = httpRequest.resourceId;
+//              res.write(JSON.stringify(response, null, 4));
+//              res.end();
+//          }
 
-         switch (req.method) { 
+//          resourceId = httpRequest.resourceId;
 
-             case "POST":
+//          switch (req.method) { 
 
-                 jsonData =  JSON.parse(payload); 
+//              case "POST":
 
-                 book.insertRecord(jsonData, callBack);
+//                  jsonData =  JSON.parse(payload); 
 
-                 break;
+//                  book.insertRecord(jsonData, callBack);
 
-             case "PUT": 
+//                  break;
 
-                 jsonData =  JSON.parse(payload); 
+//              case "PUT": 
 
-                 book.updateRecord(resourceId, jsonData, callBack);
+//                  jsonData =  JSON.parse(payload); 
 
-                 break;
+//                  book.updateRecord(resourceId, jsonData, callBack);
 
-             case "DELETE": 
+//                  break;
 
-                 book.deleteRecord(resourceId, callBack);
+//              case "DELETE": 
 
-                 break; 
+//                  book.deleteRecord(resourceId, callBack);
 
-             case "GET":  
+//                  break; 
 
-                 book.getRecords(resourceId, callBack); 
+//              case "GET":  
 
-                 break; 
-         }
+//                  book.getRecords(resourceId, callBack); 
 
-     });
- });
+//                  break; 
+//          }
 
- server.listen(port, hostname, () => {
-     console.log(`Server running at http://${hostname}:${port}/`);
- });
+//      });
+//  });
+
+//  server.listen(port, hostname, () => {
+//      console.log(`Server running at http://${hostname}:${port}/`);
+//  });
+
+const express = require('express');
+const cors = require('cors');
+const app = express();
+const hostname = '127.0.0.1';
+const port = 5000;
+
+// Middleware CORS
+app.use(cors());
+app.use(express.json());
+
+
+const db_gateway = require('./db_gateway.js');
+const http_requests = require('./http_requests.js');
+const books = require('./books.js');
+const wishList = require('./wish_list.js');
+
+// Rotas e lógica de API
+// app.post('/books', (req, res) => {
+//     const dg = new db_gateway();
+//     const book = new books(dg);
+//     const jsonData = req.body;
+
+//     book.insertRecord(jsonData, (err, result) => {
+//         if (err) {
+//             return res.status(500).json({ error: err.message });
+//         }
+//         res.json({ data: result });
+//     });
+// });
+
+// app.put('/books/:id', (req, res) => {
+//     const dg = new db_gateway();
+//     const book = new books(dg);
+//     const resourceId = req.params.id;
+//     const jsonData = req.body;
+
+//     book.updateRecord(resourceId, jsonData, (err, result) => {
+//         if (err) {
+//             return res.status(500).json({ error: err.message });
+//         }
+//         res.json({ data: result });
+//     });
+// });
+
+// app.delete('/books/:id', (req, res) => {
+//     const dg = new db_gateway();
+//     const book = new books(dg);
+//     const resourceId = req.params.id;
+
+//     book.deleteRecord(resourceId, (err, result) => {
+//         if (err) {
+//             return res.status(500).json({ error: err.message });
+//         }
+//         res.json({ data: result });
+//     });
+// });
+
+app.get('/books', (req, res) => {
+    const dg = new db_gateway();
+    const book = new books(dg);
+    const resourceId = req.params.id;
+    
+    book.getRecords(resourceId, (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        res.json({ data: result });
+    });
+});
+
+
+app.get('/wishList', (req, res) => {
+    const dg = new db_gateway();
+    const wishlistInstance = new wishList(dg); // Renomeie a instância para evitar conflito
+    const resourceId = req.params.id;
+    
+    wishlistInstance.getRecords(resourceId, (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        res.json({ data: result });
+    });
+});
+
+app.post('/postWishList', (req, res) => {
+    const dg = new db_gateway();
+    const wishlistInstance = new wishList(dg);
+   
+    const jsonData = req.body;
+    
+    wishlistInstance.insertRecord(jsonData, (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        res.status(201).json({ message: "Registro inserido com sucesso!", data: result });
+    });
+});
+
+app.put('/updateWishList/:id', (req, res) => {
+    const dg = new db_gateway();
+    const wishlistInstance = new wishList(dg);
+    const resourceId = req.params.id;
+    const jsonData = req.body;
+
+    wishlistInstance.updateRecord(resourceId, jsonData, (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        res.status(200).json({ message: "Registro alterado com sucesso!", data: result });
+    });
+});
+    
+
+
+app.delete('/deleteWishList/:id', (req, res) => {
+    const dg = new db_gateway();
+    const wishlistInstance = new wishList(dg);
+    const resourceId = req.params.id;
+
+    wishlistInstance.deleteRecord(resourceId, (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        res.json({ data: result });
+    });
+});
+
+
+app.listen(port, hostname, () => {
+    console.log(`Server running at http://${hostname}:${port}/`);
+});
